@@ -1,7 +1,8 @@
 package org.example;
 
+@SuppressWarnings("unchecked")
 public class MKQueue<T extends Comparable<T>> {
-    private Node<T> head;
+    private Node head;
     private Node<T> tail;
 
 
@@ -14,17 +15,34 @@ public class MKQueue<T extends Comparable<T>> {
     }
 
     public void addToHead(final Node value) {
-        head = value;
-        if (head.next == null) {
+        if (head == null) {
+            head = value;
             tail = head;
             head.next = tail;
+            count++;
+            return;
         }
+
+        value.next = head;
+        head.prev = value;
+        head.next = head.next.next;
+        head = value;
 
         count++;
     }
 
     public void addToTail(final Node value) {
+        if (tail == null) {
+            addToHead(value);
+            return;
+        }
 
+        value.prev = tail;
+        value.next = null;
+        tail.next = value;
+        tail = value;
+
+        count++;
     }
 
     public void addAfter(final Node before, final Node after) {
