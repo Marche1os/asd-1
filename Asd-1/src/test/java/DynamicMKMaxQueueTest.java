@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DynamicMaxQueueTest {
+public class DynamicMKMaxQueueTest {
 
     @Test
     void emptyAddToHeadTest() {

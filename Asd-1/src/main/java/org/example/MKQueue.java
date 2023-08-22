@@ -1,10 +1,12 @@
 package org.example;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 @SuppressWarnings("unchecked")
 public class MKQueue<T extends Comparable<T>> {
     private Node head;
     private Node<T> tail;
-
 
     private int count;
 
