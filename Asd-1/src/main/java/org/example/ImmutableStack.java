@@ -1,5 +1,7 @@
 package org.example;
 
+import tools.VisibleForTestOnly;
+
 import java.lang.reflect.Array;
 
 public class ImmutableStack<T extends Comparable<T>> {
@@ -28,7 +30,10 @@ public class ImmutableStack<T extends Comparable<T>> {
     }
 
     public ImmutableStack<T> pop() throws NullPointerException {
-        return null;
+        final T[] copy = (T[]) Array.newInstance(clazz, data.length - 1);
+        System.arraycopy(data, 0, copy, 0, copy.length);
+
+        return new ImmutableStack<>(copy, clazz);
     }
 
     public boolean isEmpty() {
@@ -39,6 +44,7 @@ public class ImmutableStack<T extends Comparable<T>> {
         return data.length;
     }
 
+    @VisibleForTestOnly
     public T[] getData() {
         return data;
     }

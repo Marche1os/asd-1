@@ -1,6 +1,7 @@
 package org.example;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,5 +25,19 @@ public class ImmutableStackTest {
         final ImmutableStack<Integer> twoElementsStack = emptyStack.push(10).push(20);
 
         assertEquals(2, twoElementsStack.getCount());
+        assertEquals(0, emptyStack.getCount());
+        assertTrue(emptyStack.isEmpty());
+        assertEquals(20, twoElementsStack.getData()[1]);
+
+        final ImmutableStack<Integer> singleElementStack = twoElementsStack.pop();
+
+        assertEquals(2, twoElementsStack.getCount());
+        assertEquals(20, twoElementsStack.getData()[1]);
+        assertEquals(10, singleElementStack.getData()[0]);
+        assertEquals(1, singleElementStack.getCount());
+
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+            Integer datum = singleElementStack.getData()[1];
+        });
     }
 }
