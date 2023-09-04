@@ -92,37 +92,6 @@ class DecisionTree {
 
     }
 
-    fun build(dataPoints: List<PlayTennisData>): Tree {
-        val (positive, negative) = dataPoints.partition { it.isPlay!! }
-
-        if (positive.isEmpty()) return Tree.Leaf
-        if (negative.isEmpty()) return Tree.Leaf
-
-        val attributes = dataPoints.map { it.data.keys }
-            .flatten()
-            .distinct()
-
-        if (attributes.size == 1) {
-            return if (dataPoints.count { it.isPlay!! } > dataPoints.count { !it.isPlay!! }) Tree.Leaf else Tree.Leaf
-        } else {
-            val (attribute) = attributes.map { attr ->
-                Pair(
-                    attr,
-                    calculateGain(dataPoints) { Pair(it.data[attr].toString(), it.isPlay!!) }
-                )
-            }.maxByOrNull { it.second }!!
-
-            val remaining = dataPoints.groupBy { it.data[attribute] }
-            val filteredRemaining = remaining.entries.map { entry ->
-                Pair(entry.key, entry.value.map { dataPoint ->
-                    PlayTennisData(dataPoint.data.filterKeys { it != attribute }, dataPoint.isPlay)
-                })
-            }
-
-            val children = filteredRemaining.map { Pair(it.first.toString(), build(it.second)) }.toMap();
-            return Tree.Node
-        }
-    }
 }
 
 data class PlayTennisData(
@@ -133,9 +102,4 @@ data class PlayTennisData(
     val temperature: String by data
     val humidity: String by data
     val wind: String by data
-}
-
-sealed class Tree {
-    data object Leaf : Tree()
-    data object Node : Tree()
 }
