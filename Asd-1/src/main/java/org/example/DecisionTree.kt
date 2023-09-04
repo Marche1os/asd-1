@@ -59,8 +59,6 @@ class DecisionTree {
 
     fun calculateConditionalEntropy(
         data: List<PlayTennisData>,
-        parentCriterion: String,
-        childCriterion: String,
         parentValue: String
     ): Double {
         val total = data.size.toDouble()
