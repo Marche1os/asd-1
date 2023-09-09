@@ -16,6 +16,48 @@ class DsuGraph<T> {
     fun addEdge(node1: T, node2: T) {
         adjacencyList.getOrPut(node1) { mutableSetOf() }.add(node2)
         adjacencyList.getOrPut(node2) { mutableSetOf() }.add(node1)
+
+        val visited = mutableSetOf<T>()
+        val newComponent = mutableSetOf<Pair<T, T>>()
+        dfsAddEdge(
+            node = node1,
+            target = node2,
+            visited = visited,
+            newComponent = newComponent
+        )
+        dfsAddEdge(
+            node = node2,
+            target = node1,
+            visited = visited,
+            newComponent = newComponent)
+
+        val componentsToRemove: MutableSet<Pair<T, T>> = mutableSetOf()
+
+        for (component in bridgeEdges) {
+            if (component.first == node1 && component.second == node2 ||
+                component.first == node2 && component.second == node1) {
+
+                componentsToRemove.add(component)
+            }
+        }
+
+        bridgeEdges -= componentsToRemove
+    }
+
+    private fun dfsAddEdge(node: T, target: T, visited: MutableSet<T>, newComponent: MutableSet<Pair<T, T>>) {
+        visited.add(node)
+        adjacencyList[node]?.forEach { item ->
+            if (!visited.contains(item)) {
+                if (node == target || item == target) {
+                    newComponent.add(node to item)
+                }
+                dfsAddEdge(
+                    node = item,
+                    target = target,
+                    visited = visited,
+                    newComponent = newComponent)
+            }
+        }
     }
 
     fun removeEdge(node1: T, node2: T) {
@@ -232,9 +274,9 @@ fun main() {
 
     println(graph.areNodesConnected(1, 4)) //must be true
 
-//    graph.removeEdge(2, 3)
+    graph.removeEdge(2, 3)
 
-//    println(graph.areNodesConnected(1, 4)) //must be false
+    println(graph.areNodesConnected(1, 4)) //must be false
 
     val bridges = graph.findBridges()
     bridges.forEach { bridge -> println(bridge) }
