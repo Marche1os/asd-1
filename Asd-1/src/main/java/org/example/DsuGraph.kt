@@ -3,7 +3,7 @@ package org.example
 import java.util.Stack
 
 class DsuGraph<T> {
-    private val adjacencyList: MutableMap<T, MutableSet<T>> = mutableMapOf()
+    val adjacencyList: MutableMap<T, MutableSet<T>> = mutableMapOf()
     private var bridgeEdges: MutableSet<Pair<T, T>> = mutableSetOf()
     private var visitedTime: MutableMap<T, Int> = mutableMapOf()
     private var lowTime: MutableMap<T, Int> = mutableMapOf()
@@ -262,22 +262,4 @@ class DsuGraph<T> {
 
         return biconnectedForest
     }
-}
-
-fun main() {
-    val graph = DsuGraph<Int>()
-
-    graph.addEdge(1, 2)
-    graph.addEdge(2, 3)
-    graph.addEdge(3, 4)
-
-
-    println(graph.areNodesConnected(1, 4)) //must be true
-
-    graph.removeEdge(2, 3)
-
-    println(graph.areNodesConnected(1, 4)) //must be false
-
-    val bridges = graph.findBridges()
-    bridges.forEach { bridge -> println(bridge) }
 }
