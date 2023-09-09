@@ -17,6 +17,7 @@ class DsuGraph<T> {
         adjacencyList.getOrPut(node1) { mutableSetOf() }.add(node2)
         adjacencyList.getOrPut(node2) { mutableSetOf() }.add(node1)
 
+        //5
         val visited = mutableSetOf<T>()
         val newComponent = mutableSetOf<Pair<T, T>>()
         dfsAddEdge(
@@ -29,14 +30,15 @@ class DsuGraph<T> {
             node = node2,
             target = node1,
             visited = visited,
-            newComponent = newComponent)
+            newComponent = newComponent
+        )
 
         val componentsToRemove: MutableSet<Pair<T, T>> = mutableSetOf()
 
         for (component in bridgeEdges) {
-            if (component.first == node1 && component.second == node2 ||
-                component.first == node2 && component.second == node1) {
-
+            if (component.first == node1 && component.second == node2
+                || component.first == node2 && component.second == node1
+            ) {
                 componentsToRemove.add(component)
             }
         }
@@ -55,7 +57,8 @@ class DsuGraph<T> {
                     node = item,
                     target = target,
                     visited = visited,
-                    newComponent = newComponent)
+                    newComponent = newComponent
+                )
             }
         }
     }
@@ -210,13 +213,13 @@ class DsuGraph<T> {
         lowTime[node] = time
         time++
 
-        adjacencyList[node]?.forEach { neighbor ->
-            if (!visited.contains(neighbor)) {
-                parent[neighbor] = node
-                stack.push(node to neighbor)
+        adjacencyList[node]?.forEach { item ->
+            if (!visited.contains(item)) {
+                parent[item] = node
+                stack.push(node to item)
 
                 dfsFindBiconnectedComponents(
-                    neighbor,
+                    item,
                     visited,
                     parent,
                     visitedTime,
@@ -225,26 +228,27 @@ class DsuGraph<T> {
                     biconnectedComponents
                 )
 
-                if (visitedTime[node]!! <= lowTime[neighbor]!!) {
+                if (visitedTime[node]!! <= lowTime[item]!!) {
                     val component = mutableSetOf<Pair<T, T>>()
                     var edge: Pair<T, T>?
 
                     do {
                         edge = stack.pop()
                         component.add(edge)
-                    } while (edge != node to neighbor)
+                    } while (edge != node to item)
 
                     biconnectedComponents.add(component)
                 }
 
-                lowTime[node] = minOf(lowTime[node]!!, lowTime[neighbor]!!)
-            } else if (neighbor != parent[node] && visitedTime[neighbor]!! < visitedTime[node]!!) {
-                stack.push(node to neighbor)
-                lowTime[node] = minOf(lowTime[node]!!, visitedTime[neighbor]!!)
+                lowTime[node] = minOf(lowTime[node]!!, lowTime[item]!!)
+            } else if (item != parent[node] && visitedTime[item]!! < visitedTime[node]!!) {
+                stack.push(node to item)
+                lowTime[node] = minOf(lowTime[node]!!, visitedTime[item]!!)
             }
         }
     }
 
+    //4
     fun convertToBiconnectedForest(): Set<DsuGraph<T>> {
         val biconnectedComponents = findBiconnectedComponents()
         val biconnectedForest = mutableSetOf<DsuGraph<T>>()
